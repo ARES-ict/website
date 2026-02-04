@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline On Track</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* ========== GLOBAL ========== */
+body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(180deg, #05010d, #020617);
+    color: #e5e7eb;
+    overflow-x: hidden;
+    position: relative;
+}
+.glow { text-shadow: 0 0 5px #38bdf8, 0 0 15px #6366f1; }
+
+/* ========== ANIMATION BACKGROUND ========== */
+.gadget-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* so content is clickable */
+    overflow: hidden;
+    z-index: 0;
+}
+.gadget-background .gadget {
+    position: absolute;
+    font-size: 4rem;
+    animation: floatGadget 10s infinite linear;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 15px #38bdf8);
+}
+.gadget-background .gadget:nth-child(1){ left:5%; animation-delay:0s; }
+.gadget-background .gadget:nth-child(2){ left:25%; animation-delay:2s; }
+.gadget-background .gadget:nth-child(3){ left:45%; animation-delay:4s; }
+.gadget-background .gadget:nth-child(4){ left:65%; animation-delay:6s; }
+.gadget-background .gadget:nth-child(5){ left:85%; animation-delay:8s; }
+
+@keyframes floatGadget {
+    0% { transform: translateY(120vh) rotate(0deg); }
+    50% { transform: translateY(50vh) rotate(180deg); }
+    100% { transform: translateY(-20vh) rotate(360deg); }
+}
+
+/* ========== CONTENT ========== */
+header, section, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ========== HEADER ========== */
+header {
+    text-align: center;
+    padding: 60px 20px;
+    border-bottom: 2px solid #38bdf8;
+}
+header h1 { font-size: clamp(2rem,6vw,4rem); color: #38bdf8; margin-bottom:10px; }
+header p { font-size: clamp(0.9rem,3vw,1.3rem); }
+
+/* ========== INTRO ========== */
+section.intro {
+    padding: 30px 5%;
+    background: rgba(2,6,23,0.9);
+    border-radius: 20px;
+    margin: 30px auto;
+    box-shadow: 0 0 30px rgba(56,189,248,0.25);
+}
+
+/* ========== EPISODE VIDEO ========== */
+section.episode {
+    background: rgba(2,6,23,0.95);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px auto;
+    box-shadow: 0 0 40px rgba(99,102,241,0.35);
+}
+.episode h2 { color: #a5b4fc; margin-bottom:10px; }
+.video-container {
+    width: 100%;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+video {
+    width: 100%;
+    height: auto;
+    border: 2px solid #38bdf8;
+    border-radius: 12px;
+}
+
+/* ========== FOOTER ========== */
+footer {
+    text-align:center;
+    padding:20px;
+    opacity:0.7;
+    font-size: 0.9rem;
+}
+
+/* ========== MEDIA QUERIES ========== */
+@media (max-width: 768px) {
+    header {
+        padding: 40px 15px;
+    }
+    header h1 { font-size: 2rem; }
+    header p { font-size: 1rem; }
+    section.intro, section.episode { padding: 20px; }
+    video { border-radius: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- BACKGROUND GADGET ANIMATION -->
+<div class="gadget-background">
+    <div class="gadget">📱</div>
+    <div class="gadget">💻</div>
+    <div class="gadget">🎧</div>
+    <div class="gadget">⌚</div>
+    <div class="gadget">🎮</div>
+</div>
+
+<header>
+    <h1 class="glow">Offline On Track</h1>
+    <p>Step into a space where technology and life find the perfect balance.</p>
+</header>
+
+<section class="intro">
+    <h2 class="glow">Introduction: Screen Time & Gadgets</h2>
+    <p>“Offline to On Track” is a student-created website that transforms research findings into relatable, real-life scenarios. It will highlight how limited screen time affects academic performance, health and time management.</p>
+
+	<p>Welcome to 'Offline On Track'; a series that explores how screen time and gadget use affect our daily lives; each episode guides you through practical tips, real-life scenarios, and mindful strategies to enjoy technology without letting it control you:</p>
+<section class="episode">
+    <h2 class="glow">Episode 1: Sample Video</h2>
+    <p>This episode introduces how screen time affects daily life and strategies to balance gadget usage.</p>
+    <div class="video-container">
+        <video controls>
+            <source src="animated.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <p>Learn tips to unplug, focus, and enjoy technology responsibly.</p>
+</section>
+
+<footer>
+    © 2026 TVL-ICT • Ares
+</footer>
+
+</body>
+</html>
