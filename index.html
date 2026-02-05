@@ -105,6 +105,10 @@ section.intro {
     font-size: 1.1rem;
     line-height: 1.6;
 }
+section.intro p {
+    text-align: justify; /* Justify intro paragraphs */
+    margin-bottom: 1em;
+}
 
 /* ========== EPISODE VIDEO ========== */
 section.episode {
@@ -113,6 +117,12 @@ section.episode {
     padding: 30px;
     margin: 30px auto;
     box-shadow: 0 0 40px rgba(99,102,241,0.35);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+section.episode p {
+    text-align: justify; /* Justify episode paragraphs */
+    margin-bottom: 1em;
 }
 .episode h2 { color: #a5b4fc; margin-bottom:10px; }
 .video-container {
@@ -189,12 +199,13 @@ footer {
 
 <!-- INTERACTIVE SCRIPT -->
 <script>
+// References
 const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
 const introSection = document.getElementById('intro');
 const gadgets = document.querySelectorAll('.gadget');
 
-// Desktop: mouse parallax
+// Desktop: mouse parallax for title
 if (window.innerWidth >= 768) {
     document.addEventListener('mousemove', e => {
         const x = (window.innerWidth/2 - e.clientX)/25;
@@ -219,9 +230,10 @@ if (window.DeviceOrientationEvent) {
     });
 }
 
-// Mobile: touch movement for gadgets
+// Touch move: gadgets wiggle, bounce, and glow
 let lastTouchX = 0;
 let lastTouchY = 0;
+
 document.addEventListener('touchmove', e => {
     const touch = e.touches[0];
     const deltaX = touch.clientX - lastTouchX;
@@ -230,21 +242,31 @@ document.addEventListener('touchmove', e => {
     lastTouchY = touch.clientY;
 
     gadgets.forEach((g, i) => {
-        const moveX = (deltaX * (i+1) / 30);
-        const moveY = (deltaY * (i+1) / 30);
-        g.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        setTimeout(() => g.style.transform = '', 150);
+        const moveX = (deltaX * (i+1) / 25);
+        const moveY = (deltaY * (i+1) / 25);
+
+        g.style.transition = 'transform 0.2s ease, text-shadow 0.2s ease';
+        g.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${deltaX + deltaY}deg) scale(1.15)`;
+        g.style.textShadow = '0 0 20px #38bdf8, 0 0 40px #6366f1';
+
+        setTimeout(() => {
+            g.style.transform = '';
+            g.style.textShadow = '0 0 15px #38bdf8';
+            g.style.transition = 'transform 0.3s ease, text-shadow 0.3s ease';
+        }, 200);
     });
 });
 
-// Tap to rotate gadgets
+// Tap to rotate, lift, bounce, and glow
 gadgets.forEach(g => {
     g.addEventListener('touchstart', () => {
-        g.style.transition = 'transform 0.5s ease';
-        g.style.transform = 'rotate(360deg) scale(1.2)';
+        g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
+        g.style.transform = 'rotate(360deg) scale(1.3) translateY(-30px)';
+        g.style.textShadow = '0 0 25px #38bdf8, 0 0 50px #6366f1';
         setTimeout(() => {
-            g.style.transform = '';
-            g.style.transition = 'transform 0.3s ease';
+            g.style.transform = 'translateY(0)';
+            g.style.textShadow = '0 0 15px #38bdf8';
+            g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
         }, 500);
     });
 });
