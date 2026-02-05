@@ -4,178 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Offline On Track</title>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
-/* GLOBAL */
-body {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(180deg, #05010d, #020617);
-    color: #e5e7eb;
-    overflow-x: hidden;
-    scroll-behavior: smooth; 
-    line-height: 1.8;
-}
-.glow { text-shadow: 0 0 5px #38bdf8, 0 0 15px #6366f1; }
-
-/* ANIMATION BACKGROUND */
-.gadget-background {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-}
-.gadget {
-    position: absolute;
-    font-size: 6rem;
-    opacity: 0.9;
-    animation: floatGadget 12s infinite linear;
-    filter: drop-shadow(0 0 15px #38bdf8);
-    transition: transform 0.3s ease;
-}
-.gadget:nth-child(1){ left:5%; animation-delay:-8s; }
-.gadget:nth-child(2){ left:25%; animation-delay:-6s; }
-.gadget:nth-child(3){ left:45%; animation-delay:-4s; }
-.gadget:nth-child(4){ left:65%; animation-delay:-2s; }
-.gadget:nth-child(5){ left:85%; animation-delay:0s; }
-
-@keyframes floatGadget {
-    0% { transform: translateY(120vh) rotate(0deg); }
-    100% { transform: translateY(-20vh) rotate(360deg); }
-}
-
-/* CONTENT */
-header, section, footer {
-    position: relative;
-    z-index: 1;
-}
-
-/* TITLE PAGE */
-header {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 40px 20px;
-    border-bottom: 2px solid #38bdf8;
-    background: radial-gradient(circle at center, rgba(56,189,248,0.15), transparent 60%);
-}
-
-header h1 {
-    font-size: clamp(4rem, 10vw, 8rem);
-    color: #38bdf8;
-    margin-bottom: 20px;
-    font-weight: 700;
-    line-height: 1.1;
-    text-shadow: 0 0 10px #38bdf8;
-}
-
-header p {
-    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-    max-width: 800px;
-    opacity: 0.95;
-    line-height: 1.8;
-    text-align: center; 
-    margin-bottom: 10px; 
-}
-
-/* Screen time display */
-#screenTime {
-    margin-top: 10px;
-    font-size: 1.2rem;
-    color: #38bdf8;
-}
-
-/* Start Experience Button */
-#startBtn {
-    margin-top: 30px;
-    padding: 20px 50px;
-    font-size: clamp(1.2rem, 2vw, 1.5rem);
-    color: #05010d;
-    background-color: #38bdf8;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 0 20px rgba(56,189,248,0.5);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#startBtn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px rgba(56,189,248,0.8);
-}
-
-/* INTRO */
-section.intro {
-    padding: 30px 5%;
-    background: rgba(2,6,23,0.9);
-    border-radius: 20px;
-    margin: 30px auto;
-    box-shadow: 0 0 30px rgba(56,189,248,0.25);
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
-section.intro p {
-    text-align: left; 
-    margin-bottom: 25px; 
-}
-
-/*  EPISODE VIDEO */
-section.episode {
-    background: rgba(2,6,23,0.95);
-    border-radius: 20px;
-    padding: 30px;
-    margin: 30px auto;
-    box-shadow: 0 0 40px rgba(99,102,241,0.35);
-    font-size: 1.1rem;
-    line-height: 1.8;
-}
-section.episode p {
-    text-align: left; 
-    margin-bottom: 40px; 
-}
-.episode h2 { color: #a5b4fc; margin-bottom:15px; }
-.video-container {
-    width: 100%;
-    max-width: 900px; 
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-}
-video {
-    width: 100%;
-    border: 2px solid #38bdf8;
-    border-radius: 12px;
-}
-
-/* FOOTER */
-footer {
-    text-align:center;
-    padding:20px;
-    opacity:0.7;
-    font-size: 0.9rem;
-}
-
-/* MOBILE */
-@media (max-width: 768px) {
-    header { padding: 60px 15px; }
-    header h1 { font-size: clamp(3rem, 12vw, 6rem); }
-    header p { font-size: clamp(1.1rem, 3vw, 1.4rem); margin-bottom: 30px; }
-    #startBtn { padding: 15px 35px; font-size: clamp(1rem, 2vw, 1.2rem); }
-    section.intro, section.episode { padding: 20px 5%; margin: 20px auto; }
-    .gadget { font-size: 4rem; }
-}
+body { margin:0; font-family:'Orbitron',sans-serif; background:linear-gradient(180deg,#05010d,#020617); color:#e5e7eb; overflow-x:hidden; scroll-behavior:smooth; line-height:1.8;}
+.glow { text-shadow:0 0 5px #38bdf8,0 0 15px #6366f1;}
+header,section,footer{position:relative; z-index:1;}
+header {height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:40px 20px; border-bottom:2px solid #38bdf8; background:radial-gradient(circle at center, rgba(56,189,248,0.15), transparent 60%);}
+header h1{font-size:clamp(4rem,10vw,8rem); color:#38bdf8; margin-bottom:20px; font-weight:700; line-height:1.1; text-shadow:0 0 10px #38bdf8;}
+header p{font-size:clamp(1.3rem,2.5vw,1.8rem); max-width:800px; opacity:0.95; line-height:1.8; text-align:center; margin-bottom:10px;}
+#screenTime{margin-top:10px; font-size:1.2rem; color:#38bdf8;}
+#gadget-background{position:fixed; inset:0; pointer-events:none; z-index:0;}
+.gadget{position:absolute; font-size:6rem; opacity:0.9; animation:floatGadget 12s infinite linear; filter:drop-shadow(0 0 15px #38bdf8); transition:transform 0.3s ease;}
+.gadget:nth-child(1){left:5%; animation-delay:-8s;} .gadget:nth-child(2){left:25%; animation-delay:-6s;} .gadget:nth-child(3){left:45%; animation-delay:-4s;} .gadget:nth-child(4){left:65%; animation-delay:-2s;} .gadget:nth-child(5){left:85%; animation-delay:0s;}
+@keyframes floatGadget {0%{transform:translateY(120vh) rotate(0deg);}100%{transform:translateY(-20vh) rotate(360deg);}}
+#startBtn {margin-top:30px; padding:20px 50px; font-size:clamp(1.2rem,2vw,1.5rem); color:#05010d; background-color:#38bdf8; border:none; border-radius:30px; cursor:pointer; font-weight:bold; box-shadow:0 0 20px rgba(56,189,248,0.5); transition: transform 0.2s ease, box-shadow 0.2s ease;}
+#startBtn:hover{transform:scale(1.05); box-shadow:0 0 30px rgba(56,189,248,0.8);}
+section.intro{padding:30px 5%; background:rgba(2,6,23,0.9); border-radius:20px; margin:30px auto; box-shadow:0 0 30px rgba(56,189,248,0.25); font-size:1.1rem; line-height:1.8;}
+section.intro p{text-align:left; margin-bottom:25px;}
+section.episode{background:rgba(2,6,23,0.95); border-radius:20px; padding:30px; margin:30px auto; box-shadow:0 0 40px rgba(99,102,241,0.35); font-size:1.1rem; line-height:1.8;}
+section.episode p{text-align:left; margin-bottom:40px;} .episode h2{color:#a5b4fc; margin-bottom:15px;}
+.video-container{width:100%; max-width:900px; margin:20px auto; display:flex; justify-content:center;}
+video{width:100%; border:2px solid #38bdf8; border-radius:12px;}
+footer{text-align:center; padding:20px; opacity:0.7; font-size:0.9rem;}
+@media(max-width:768px){header{padding:60px 15px;} header h1{font-size:clamp(3rem,12vw,6rem);} header p{font-size:clamp(1.1rem,3vw,1.4rem); margin-bottom:30px;} #startBtn{padding:15px 35px; font-size:clamp(1rem,2vw,1.2rem);} section.intro, section.episode{padding:20px 5%; margin:20px auto;} .gadget{font-size:4rem;}}
 </style>
 </head>
-
 <body>
 
-<!-- BACKGROUND GADGET ANIMATION -->
 <div class="gadget-background">
     <div class="gadget">📱</div>
     <div class="gadget">💻</div>
@@ -184,7 +39,6 @@ footer {
     <div class="gadget">🎮</div>
 </div>
 
-<!-- HERO TITLE PAGE -->
 <header>
     <h1 class="glow" id="heroTitle">Offline On Track</h1>
     <p>Step into a space where technology and life find the perfect balance.</p>
@@ -194,149 +48,90 @@ footer {
 
 <section class="intro" id="intro">
     <h2 class="glow">Introduction: Screen Time & Gadgets</h2>
-    <p><strong>This is a <strong>student-created</strong> website that transforms research findings into relatable, real-life school scenarios. It explores the positive effects of limiting screen time on our overall well-being. By consciously reducing exposure to digital devices, we can improve focus, enhance sleep quality, boost mental clarity, and foster stronger interpersonal connections.</p>
-    <p>Offline On Track is a short animated series that guides viewers on how limiting screen time can improve focus, sleep, and overall well-being. Through relatable stories and practical tips, it helps you build healthier habits with technology. Check out the episodes below:</p>
+    <p>This student-created website transforms research findings into relatable school scenarios, showing the benefits of limiting screen time for focus, sleep, and mental clarity.</p>
 </section>
 
 <section class="episode">
     <h2 class="glow">Episode 1: Sample Video</h2>
-    <p>This short episode introduces how screen time affects daily life and strategies to balance gadget usage.</p>
     <div class="video-container">
-        <video controls>
-            <source src="animated.mp4" type="video/mp4">
-        </video>
+        <video controls><source src="animated.mp4" type="video/mp4"></video>
     </div>
-    <p>Learn tips to unplug, focus, and enjoy technology responsibly.</p>
 </section>
 
-<footer>
-    © 2026 OFFLINE ON TRACK • ICT • Ares
-</footer>
+<footer>© 2026 OFFLINE ON TRACK • ICT • Ares</footer>
 
 <script>
-const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
 const introSection = document.getElementById('intro');
-const gadgets = document.querySelectorAll('.gadget');
 const screenTimeDisplay = document.getElementById('screenTime');
 
-// -----------------------------
-// Parallax Mouse Effect
-// -----------------------------
-document.addEventListener('mousemove', e => {
-    if (window.innerWidth < 768) return;
-    const x = (window.innerWidth/2 - e.clientX)/25;
-    const y = (window.innerHeight/2 - e.clientY)/25;
-    title.style.transform = `translate(${x}px, ${y}px)`;
-    title.style.textShadow =
-        `${-x}px ${-y}px 15px #38bdf8,
-         ${x}px ${y}px 30px #6366f1`;
-});
-
-// Tap gadgets to rotate and glow
-gadgets.forEach(g => {
-    g.addEventListener('touchstart', () => {
-        g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
-        g.style.transform = 'rotate(360deg) scale(1.3) translateY(-30px)';
-        g.style.textShadow = '0 0 25px #38bdf8, 0 0 50px #6366f1';
-        setTimeout(() => {
-            g.style.transform = 'translateY(0)';
-            g.style.textShadow = '0 0 15px #38bdf8';
-            g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
-        }, 500);
-    });
-});
-
-// Scroll to intro on button click
-startBtn.addEventListener('click', () => {
-    window.scrollTo({
-        top: introSection.offsetTop,
-        behavior: 'smooth'
-    });
-});
-
-// -----------------------------
-// ACTIVE SCREEN TIME TRACKER WITH DAILY RESET
-// -----------------------------
 if (Notification.permission !== "granted") Notification.requestPermission();
 
-let startTime = Date.now();
+let lastTimestamp = Date.now();
 let savedTime = parseInt(localStorage.getItem('screenTimeSpent')) || 0;
 let dailyTime = parseInt(localStorage.getItem('dailyTime')) || 0;
 let lastDate = localStorage.getItem('lastDate') || new Date().toDateString();
 let notifiedCount = parseInt(localStorage.getItem('notifiedCount')) || 0;
-let isActive = true;
+
+// Scroll to intro
+startBtn.addEventListener('click',()=>{window.scrollTo({top:introSection.offsetTop,behavior:'smooth'});});
 
 // Show notification
-function showNotification() {
-    if (Notification.permission === "granted") {
-        new Notification("Offline On Track", {
-            body: "You've been using your device for more than 5 hours! Take a break.",
-            icon: "https://i.imgur.com/38bdf8.png"
-        });
+function showNotification(){
+    if(Notification.permission==="granted"){
+        new Notification("Offline On Track",{body:"You've been using your device for more than 5 hours! Take a break.",icon:"https://i.imgur.com/38bdf8.png"});
     }
 }
 
-// Update timer
-function updateScreenTime() {
-    // Daily reset check
-    const today = new Date().toDateString();
-    if (today !== lastDate) {
-        dailyTime = 0;
-        lastDate = today;
-        localStorage.setItem('dailyTime', dailyTime);
-        localStorage.setItem('lastDate', lastDate);
-    }
-
-    if (!isActive) return;
-
+// Update function checks actual elapsed time to detect device off
+function updateScreenTime(){
     const now = Date.now();
-    const elapsed = Math.floor((now - startTime)/1000);
-    dailyTime += elapsed;
-    savedTime += elapsed;
+    let diffSec = Math.floor((now - lastTimestamp)/1000);
 
-    startTime = now;
+    // Daily reset
+    const today = new Date().toDateString();
+    if(today !== lastDate){
+        dailyTime=0;
+        lastDate=today;
+        localStorage.setItem('dailyTime',dailyTime);
+        localStorage.setItem('lastDate',lastDate);
+    }
 
-    // Calculate hours and minutes for daily display
-    const hours = Math.floor(dailyTime / 3600);
-    const minutes = Math.floor((dailyTime % 3600) / 60);
+    // Only add small diffs (<2 minutes) to avoid counting device-off periods
+    if(diffSec < 120){
+        dailyTime += diffSec;
+        savedTime += diffSec;
+    }
 
-    screenTimeDisplay.textContent = `Time spent today: ${hours}h ${minutes}m`;
+    lastTimestamp=now;
 
-    // Save in localStorage
-    localStorage.setItem('dailyTime', dailyTime);
-    localStorage.setItem('screenTimeSpent', savedTime);
+    const hours=Math.floor(dailyTime/3600);
+    const minutes=Math.floor((dailyTime%3600)/60);
+    screenTimeDisplay.textContent=`Time spent on screen: ${hours}h ${minutes}m`;
 
-    // Repeat 5-hour lifetime notifications
-    const periods = Math.floor(savedTime / 18000); // 5 hours in seconds
-    if (periods > notifiedCount) {
+    // Save
+    localStorage.setItem('dailyTime',dailyTime);
+    localStorage.setItem('screenTimeSpent',savedTime);
+
+    // 5-hour notification
+    const periods=Math.floor(savedTime/18000);
+    if(periods>notifiedCount){
         showNotification();
-        notifiedCount = periods;
-        localStorage.setItem('notifiedCount', notifiedCount);
+        notifiedCount=periods;
+        localStorage.setItem('notifiedCount',notifiedCount);
     }
 }
 
-// Update every second
-setInterval(updateScreenTime, 1000);
+// Run every second
+setInterval(updateScreenTime,1000);
 
-// Pause/resume on visibility change
-document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        isActive = false;
-    } else {
-        startTime = Date.now();
-        isActive = true;
-    }
-});
-
-// Save on unload
-window.addEventListener('beforeunload', () => {
-    localStorage.setItem('dailyTime', dailyTime);
-    localStorage.setItem('screenTimeSpent', savedTime);
-    localStorage.setItem('notifiedCount', notifiedCount);
-    localStorage.setItem('lastDate', lastDate);
+// Save before leaving
+window.addEventListener('beforeunload',()=>{
+    localStorage.setItem('dailyTime',dailyTime);
+    localStorage.setItem('screenTimeSpent',savedTime);
+    localStorage.setItem('notifiedCount',notifiedCount);
+    localStorage.setItem('lastDate',lastDate);
 });
 </script>
-
 </body>
 </html>
