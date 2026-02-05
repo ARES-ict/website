@@ -80,12 +80,12 @@ header p {
     opacity: 0.95;
     line-height: 1.8;
     text-align: center; 
-    margin-bottom: 40px; 
+    margin-bottom: 10px; 
 }
 
 /* Screen time display */
 #screenTime {
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 1.2rem;
     color: #38bdf8;
 }
@@ -200,7 +200,7 @@ footer {
 
 <section class="episode">
     <h2 class="glow">Episode 1: Sample Video</h2>
-    <p>This short episode introduces how screen time affects daily life and strategies to balance gadget usage.(sample vid lang po muna:>)</p>
+    <p>This short episode introduces how screen time affects daily life and strategies to balance gadget usage.</p>
     <div class="video-container">
         <video controls>
             <source src="animated.mp4" type="video/mp4">
@@ -213,7 +213,6 @@ footer {
     © 2026 OFFLINE ON TRACK • ICT • Ares
 </footer>
 
-<!-- INTERACTIVE TITLE SCRIPT -->
 <script>
 const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
@@ -221,7 +220,9 @@ const introSection = document.getElementById('intro');
 const gadgets = document.querySelectorAll('.gadget');
 const screenTimeDisplay = document.getElementById('screenTime');
 
-// Parallax mouse effect
+// -----------------------------
+// Parallax Mouse Effect
+// -----------------------------
 document.addEventListener('mousemove', e => {
     if (window.innerWidth < 768) return;
     const x = (window.innerWidth/2 - e.clientX)/25;
@@ -246,7 +247,7 @@ gadgets.forEach(g => {
     });
 });
 
-// Scroll to intro on button click with smooth auto-scroll
+// Scroll to intro on button click
 startBtn.addEventListener('click', () => {
     window.scrollTo({
         top: introSection.offsetTop,
@@ -255,28 +256,51 @@ startBtn.addEventListener('click', () => {
 });
 
 // -----------------------------
-// SCREEN TIME TRACKER
+// SCREEN TIME TRACKER WITH REPEATING 5-HOUR NOTIFICATIONS
 // -----------------------------
+if (Notification.permission !== "granted") {
+    Notification.requestPermission();
+}
+
 let startTime = Date.now();
 let savedTime = parseInt(localStorage.getItem('screenTimeSpent')) || 0;
 
+// Track number of 5-hour notifications already sent
+let notifiedCount = parseInt(localStorage.getItem('notifiedCount')) || 0;
+
+function showNotification() {
+    if (Notification.permission === "granted") {
+        new Notification("Offline On Track", {
+            body: "You've been using your device for more than 5 hours! Take a break.",
+            icon: "https://i.imgur.com/38bdf8.png"
+        });
+    }
+}
+
 function updateScreenTime() {
     const now = Date.now();
-    const elapsed = Math.floor((now - startTime)/1000) + savedTime;
+    const elapsed = Math.floor((now - startTime)/1000) + savedTime; // total seconds
     const minutes = Math.floor(elapsed / 60);
     const seconds = elapsed % 60;
     screenTimeDisplay.textContent = `Time spent on page: ${minutes}m ${seconds}s`;
     localStorage.setItem('screenTimeSpent', elapsed);
+
+    // Check for repeated 5-hour notifications
+    let periods = Math.floor(elapsed / 18000); // 18000 seconds = 5 hours
+    if (periods > notifiedCount) {
+        showNotification();
+        notifiedCount = periods;
+        localStorage.setItem('notifiedCount', notifiedCount);
+    }
 }
 
-// Update every second
 setInterval(updateScreenTime, 1000);
 
-// Save time when user closes or refreshes page
 window.addEventListener('beforeunload', () => {
     const now = Date.now();
     const elapsed = Math.floor((now - startTime)/1000) + savedTime;
     localStorage.setItem('screenTimeSpent', elapsed);
+    localStorage.setItem('notifiedCount', notifiedCount);
 });
 </script>
 
