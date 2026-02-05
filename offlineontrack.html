@@ -188,7 +188,7 @@ footer {
 <header>
     <h1 class="glow" id="heroTitle">Offline On Track</h1>
     <p>Step into a space where technology and life find the perfect balance.</p>
-    <p id="screenTime">Time spent on page: 0m 0s</p>
+    <p id="screenTime">Time spent on screen: 0h 0m</p>
     <button id="startBtn">Start Experience</button>
 </header>
 
@@ -256,18 +256,18 @@ startBtn.addEventListener('click', () => {
 });
 
 // -----------------------------
-// SCREEN TIME TRACKER WITH REPEATING 5-HOUR NOTIFICATIONS
+// ACTIVE SCREEN TIME TRACKER WITH DAILY RESET
 // -----------------------------
-if (Notification.permission !== "granted") {
-    Notification.requestPermission();
-}
+if (Notification.permission !== "granted") Notification.requestPermission();
 
 let startTime = Date.now();
 let savedTime = parseInt(localStorage.getItem('screenTimeSpent')) || 0;
-
-// Track number of 5-hour notifications already sent
+let dailyTime = parseInt(localStorage.getItem('dailyTime')) || 0;
+let lastDate = localStorage.getItem('lastDate') || new Date().toDateString();
 let notifiedCount = parseInt(localStorage.getItem('notifiedCount')) || 0;
+let isActive = true;
 
+// Show notification
 function showNotification() {
     if (Notification.permission === "granted") {
         new Notification("Offline On Track", {
@@ -277,16 +277,38 @@ function showNotification() {
     }
 }
 
+// Update timer
 function updateScreenTime() {
-    const now = Date.now();
-    const elapsed = Math.floor((now - startTime)/1000) + savedTime; // total seconds
-    const minutes = Math.floor(elapsed / 60);
-    const seconds = elapsed % 60;
-    screenTimeDisplay.textContent = `Time spent on page: ${minutes}m ${seconds}s`;
-    localStorage.setItem('screenTimeSpent', elapsed);
+    // Daily reset check
+    const today = new Date().toDateString();
+    if (today !== lastDate) {
+        dailyTime = 0;
+        lastDate = today;
+        localStorage.setItem('dailyTime', dailyTime);
+        localStorage.setItem('lastDate', lastDate);
+    }
 
-    // Check for repeated 5-hour notifications
-    let periods = Math.floor(elapsed / 18000); // 18000 seconds = 5 hours
+    if (!isActive) return;
+
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime)/1000);
+    dailyTime += elapsed;
+    savedTime += elapsed;
+
+    startTime = now;
+
+    // Calculate hours and minutes for daily display
+    const hours = Math.floor(dailyTime / 3600);
+    const minutes = Math.floor((dailyTime % 3600) / 60);
+
+    screenTimeDisplay.textContent = `Time spent today: ${hours}h ${minutes}m`;
+
+    // Save in localStorage
+    localStorage.setItem('dailyTime', dailyTime);
+    localStorage.setItem('screenTimeSpent', savedTime);
+
+    // Repeat 5-hour lifetime notifications
+    const periods = Math.floor(savedTime / 18000); // 5 hours in seconds
     if (periods > notifiedCount) {
         showNotification();
         notifiedCount = periods;
@@ -294,13 +316,25 @@ function updateScreenTime() {
     }
 }
 
+// Update every second
 setInterval(updateScreenTime, 1000);
 
+// Pause/resume on visibility change
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        isActive = false;
+    } else {
+        startTime = Date.now();
+        isActive = true;
+    }
+});
+
+// Save on unload
 window.addEventListener('beforeunload', () => {
-    const now = Date.now();
-    const elapsed = Math.floor((now - startTime)/1000) + savedTime;
-    localStorage.setItem('screenTimeSpent', elapsed);
+    localStorage.setItem('dailyTime', dailyTime);
+    localStorage.setItem('screenTimeSpent', savedTime);
     localStorage.setItem('notifiedCount', notifiedCount);
+    localStorage.setItem('lastDate', lastDate);
 });
 </script>
 
