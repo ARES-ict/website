@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline On Track</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+/* GLOBAL */
+body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(180deg, #05010d, #020617);
+    color: #e5e7eb;
+    overflow-x: hidden;
+    scroll-behavior: smooth; 
+    line-height: 1.8;
+}
+.glow { text-shadow: 0 0 5px #38bdf8, 0 0 15px #6366f1; }
+
+/* ANIMATION BACKGROUND */
+.gadget-background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+.gadget {
+    position: absolute;
+    font-size: 6rem;
+    opacity: 0.9;
+    animation: floatGadget 12s infinite linear;
+    filter: drop-shadow(0 0 15px #38bdf8);
+    transition: transform 0.3s ease;
+}
+.gadget:nth-child(1){ left:5%; animation-delay:-8s; }
+.gadget:nth-child(2){ left:25%; animation-delay:-6s; }
+.gadget:nth-child(3){ left:45%; animation-delay:-4s; }
+.gadget:nth-child(4){ left:65%; animation-delay:-2s; }
+.gadget:nth-child(5){ left:85%; animation-delay:0s; }
+
+@keyframes floatGadget {
+    0% { transform: translateY(120vh) rotate(0deg); }
+    100% { transform: translateY(-20vh) rotate(360deg); }
+}
+
+/* CONTENT */
+header, section, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* TITLE PAGE */
+header {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+    border-bottom: 2px solid #38bdf8;
+    background: radial-gradient(circle at center, rgba(56,189,248,0.15), transparent 60%);
+}
+
+header h1 {
+    font-size: clamp(4rem, 10vw, 8rem);
+    color: #38bdf8;
+    margin-bottom: 20px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-shadow: 0 0 10px #38bdf8;
+}
+
+header p {
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    max-width: 800px;
+    opacity: 0.95;
+    line-height: 1.8;
+    text-align: center; 
+    margin-bottom: 40px; 
+}
+
+/* Start Experience Button */
+#startBtn {
+    margin-top: 30px;
+    padding: 20px 50px;
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    color: #05010d;
+    background-color: #38bdf8;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 20px rgba(56,189,248,0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#startBtn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(56,189,248,0.8);
+}
+
+/* INTRO */
+section.intro {
+    padding: 30px 5%;
+    background: rgba(2,6,23,0.9);
+    border-radius: 20px;
+    margin: 30px auto;
+    box-shadow: 0 0 30px rgba(56,189,248,0.25);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+section.intro p {
+    text-align: left; 
+    margin-bottom: 25px; 
+}
+
+/*  EPISODE VIDEO */
+section.episode {
+    background: rgba(2,6,23,0.95);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px auto;
+    box-shadow: 0 0 40px rgba(99,102,241,0.35);
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+section.episode p {
+    text-align: left; 
+    margin-bottom: 40px; 
+}
+.episode h2 { color: #a5b4fc; margin-bottom:15px; }
+.video-container {
+    width: 100%;
+    max-width: 900px; 
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+}
+video {
+    width: 100%;
+    border: 2px solid #38bdf8;
+    border-radius: 12px;
+}
+
+/* FOOTER */
+footer {
+    text-align:center;
+    padding:20px;
+    opacity:0.7;
+    font-size: 0.9rem;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    header { padding: 60px 15px; }
+    header h1 { font-size: clamp(3rem, 12vw, 6rem); }
+    header p { font-size: clamp(1.1rem, 3vw, 1.4rem); margin-bottom: 30px; }
+    #startBtn { padding: 15px 35px; font-size: clamp(1rem, 2vw, 1.2rem); }
+    section.intro, section.episode { padding: 20px 5%; margin: 20px auto; }
+    .gadget { font-size: 4rem; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND GADGET ANIMATION -->
+<div class="gadget-background">
+    <div class="gadget">📱</div>
+    <div class="gadget">💻</div>
+    <div class="gadget">🎧</div>
+    <div class="gadget">⌚</div>
+    <div class="gadget">🎮</div>
+</div>
+
+<!-- HERO TITLE PAGE -->
+<header>
+    <h1 class="glow" id="heroTitle">Offline On Track</h1>
+    <p>Step into a space where technology and life find the perfect balance.</p>
+    <button id="startBtn">Start Experience</button>
+</header>
+
+<section class="intro" id="intro">
+    <h2 class="glow">Introduction: Screen Time & Gadgets</h2>
+    <p><strong>This is a <strong>student-created</strong> website that transforms research findings into relatable, real-life school scenarios. It explores the positive effects of limiting screen time on our overall well-being. By consciously reducing exposure to digital devices, we can improve focus, enhance sleep quality, boost mental clarity, and foster stronger interpersonal connections.</p>
+    <p>Offline On Track is a short animated series that guides viewers on how limiting screen time can improve focus, sleep, and overall well-being. Through relatable stories and practical tips, it helps you build healthier habits with technology. Check out the episodes below:</p>
+
+    <!-- Download App Button -->
+    <p style="text-align:center; margin-top:30px;">
+        <a href="https://ares-ict.github.io/download/offlineontrack.html" target="_blank" 
+           style="
+               display:inline-block;
+               padding:20px 50px;
+               font-size:clamp(1.2rem, 2vw, 1.5rem);
+               color:#05010d;
+               background-color:#38bdf8;
+               border-radius:30px;
+               font-weight:bold;
+               text-decoration:none;
+               box-shadow:0 0 20px rgba(56,189,248,0.5);
+               transition: transform 0.2s ease, box-shadow 0.2s ease;
+           "
+           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 30px rgba(56,189,248,0.8)';"
+           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(56,189,248,0.5)';"
+        >
+            Click here to download our app
+        </a>
+    </p>
+</section>
+
+<section class="episode">
+    <h2 class="glow">Episode 1: Sample Video</h2>
+    <p>This short episode introduces how screen time affects daily life and strategies to balance gadget usage.(sample vid lang po muna:>)</p>
+    <div class="video-container">
+        <video controls>
+            <source src="animated.mp4" type="video/mp4">
+        </video>
+    </div>
+    <p>Learn tips to unplug, focus, and enjoy technology responsibly.</p>
+</section>
+
+<footer>
+    © 2026 OFFLINE ON TRACK • ICT • Ares
+</footer>
+
+<!-- INTERACTIVE TITLE SCRIPT -->
+<script>
+const title = document.getElementById('heroTitle');
+const startBtn = document.getElementById('startBtn');
+const introSection = document.getElementById('intro');
+const gadgets = document.querySelectorAll('.gadget');
+
+// Parallax mouse effect
+document.addEventListener('mousemove', e => {
+    if (window.innerWidth < 768) return;
+    const x = (window.innerWidth/2 - e.clientX)/25;
+    const y = (window.innerHeight/2 - e.clientY)/25;
+    title.style.transform = `translate(${x}px, ${y}px)`;
+    title.style.textShadow =
+        `${-x}px ${-y}px 15px #38bdf8,
+         ${x}px ${y}px 30px #6366f1`;
+});
+
+// Tap gadgets to rotate and glow
+gadgets.forEach(g => {
+    g.addEventListener('touchstart', () => {
+        g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
+        g.style.transform = 'rotate(360deg) scale(1.3) translateY(-30px)';
+        g.style.textShadow = '0 0 25px #38bdf8, 0 0 50px #6366f1';
+        setTimeout(() => {
+            g.style.transform = 'translateY(0)';
+            g.style.textShadow = '0 0 15px #38bdf8';
+            g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
+        }, 500);
+    });
+});
+
+// Scroll to intro on button click with smooth auto-scroll
+startBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: introSection.offsetTop,
+        behavior: 'smooth'
+    });
+});
+</script>
+
+</body>
+</html>
