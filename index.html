@@ -15,6 +15,8 @@ body {
     background: linear-gradient(180deg, #05010d, #020617);
     color: #e5e7eb;
     overflow-x: hidden;
+    scroll-behavior: smooth; /* smooth scroll for all anchor movements */
+    line-height: 1.8;
 }
 .glow { text-shadow: 0 0 5px #38bdf8, 0 0 15px #6366f1; }
 
@@ -52,33 +54,38 @@ header, section, footer {
 
 /* ========== HERO TITLE PAGE ========== */
 header {
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 20px;
-    background: radial-gradient(circle at center, rgba(56,189,248,0.15), transparent 60%);
+    padding: 40px 20px;
     border-bottom: 2px solid #38bdf8;
+    background: radial-gradient(circle at center, rgba(56,189,248,0.15), transparent 60%);
 }
+
 header h1 {
-    font-size: clamp(4rem, 10vw, 8rem); /* Big & readable */
+    font-size: clamp(4rem, 10vw, 8rem);
     color: #38bdf8;
     margin-bottom: 20px;
-    text-shadow: 0 0 10px #38bdf8;
     font-weight: 700;
     line-height: 1.1;
-    transition: transform 0.2s ease, text-shadow 0.2s ease;
+    text-shadow: 0 0 10px #38bdf8;
 }
+
 header p {
     font-size: clamp(1.3rem, 2.5vw, 1.8rem);
     max-width: 800px;
-    opacity: 0.9;
-    line-height: 1.5;
+    opacity: 0.95;
+    line-height: 1.8;
+    text-align: left;  /* clear and easy to read */
+    margin-bottom: 40px; /* bigger space before button */
 }
+
+/* Start Experience Button */
 #startBtn {
-    margin-top: 40px;
+    margin-top: 30px;
     padding: 20px 50px;
     font-size: clamp(1.2rem, 2vw, 1.5rem);
     color: #05010d;
@@ -90,6 +97,7 @@ header p {
     box-shadow: 0 0 20px rgba(56,189,248,0.5);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 #startBtn:hover {
     transform: scale(1.05);
     box-shadow: 0 0 30px rgba(56,189,248,0.8);
@@ -103,11 +111,11 @@ section.intro {
     margin: 30px auto;
     box-shadow: 0 0 30px rgba(56,189,248,0.25);
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
 }
 section.intro p {
-    text-align: justify; /* Justify intro paragraphs */
-    margin-bottom: 1em;
+    text-align: left;  /* easy to read */
+    margin-bottom: 25px; /* bigger space between paragraphs */
 }
 
 /* ========== EPISODE VIDEO ========== */
@@ -118,22 +126,22 @@ section.episode {
     margin: 30px auto;
     box-shadow: 0 0 40px rgba(99,102,241,0.35);
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
 }
 section.episode p {
-    text-align: justify; /* Justify episode paragraphs */
-    margin-bottom: 1em;
+    text-align: left;  /* easy to read */
+    margin-bottom: 25px; /* bigger space between paragraphs */
 }
-.episode h2 { color: #a5b4fc; margin-bottom:10px; }
+.episode h2 { color: #a5b4fc; margin-bottom:15px; }
 .video-container {
     width: 100%;
+    max-width: 900px; /* bigger video */
     margin: 20px auto;
     display: flex;
     justify-content: center;
 }
 video {
     width: 100%;
-    max-width: 700px;
     border: 2px solid #38bdf8;
     border-radius: 12px;
 }
@@ -148,12 +156,12 @@ footer {
 
 /* ========== MOBILE ========== */
 @media (max-width: 768px) {
-    header { padding: 40px 15px; }
+    header { padding: 60px 15px; }
     header h1 { font-size: clamp(3rem, 12vw, 6rem); }
-    header p { font-size: clamp(1.1rem, 3vw, 1.4rem); }
+    header p { font-size: clamp(1.1rem, 3vw, 1.4rem); margin-bottom: 30px; }
     #startBtn { padding: 15px 35px; font-size: clamp(1rem, 2vw, 1.2rem); }
     section.intro, section.episode { padding: 20px 5%; margin: 20px auto; }
-    .gadget { font-size: 3rem; }
+    .gadget { font-size: 4rem; }
 }
 </style>
 </head>
@@ -172,13 +180,13 @@ footer {
 <!-- HERO TITLE PAGE -->
 <header>
     <h1 class="glow" id="heroTitle">Offline On Track</h1>
-    <p>Step into a space where technology and life find the perfect balance.</p>
+    <p>Step into a space where technology and life find the perfect balance. Learn to manage screen time, improve focus, and enjoy technology responsibly.</p>
     <button id="startBtn">Start Experience</button>
 </header>
 
 <section class="intro" id="intro">
     <h2 class="glow">Introduction: Screen Time & Gadgets</h2>
-    <p><strong>This is a <strong>student-created</strong> website that transforms research findings into relatable, real-life school scenarios. It explores the positive effects of limiting screen time on our overall well-being. By consciously reducing exposure to digital devices, we can improve focus, enhance sleep quality, boost mental clarity, and foster stronger interpersonal connections. This initiative demonstrates how balancing technology use allows us to reclaim time for personal growth, creativity, and healthier habits, proving that stepping away from screens can be just as engaging and rewarding as being online.</p>
+    <p><strong>This is a <strong>student-created</strong> website that transforms research findings into relatable, real-life school scenarios. It explores the positive effects of limiting screen time on our overall well-being. By consciously reducing exposure to digital devices, we can improve focus, enhance sleep quality, boost mental clarity, and foster stronger interpersonal connections.</p>
     <p>Offline On Track is a short animated series that guides viewers on how limiting screen time can improve focus, sleep, and overall well-being. Through relatable stories and practical tips, it helps you build healthier habits with technology. Check out the episodes below:</p>
 </section>
 
@@ -197,67 +205,25 @@ footer {
     © 2026 OFFLINE ON TRACK • ICT • Ares
 </footer>
 
-<!-- INTERACTIVE SCRIPT -->
+<!-- INTERACTIVE TITLE SCRIPT -->
 <script>
-// References
 const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
 const introSection = document.getElementById('intro');
 const gadgets = document.querySelectorAll('.gadget');
 
-// Desktop: mouse parallax for title
-if (window.innerWidth >= 768) {
-    document.addEventListener('mousemove', e => {
-        const x = (window.innerWidth/2 - e.clientX)/25;
-        const y = (window.innerHeight/2 - e.clientY)/25;
-        title.style.transform = `translate(${x}px, ${y}px)`;
-        title.style.textShadow =
-            `${-x}px ${-y}px 15px #38bdf8,
-             ${x}px ${y}px 30px #6366f1`;
-    });
-}
-
-// Mobile: device tilt for title
-if (window.DeviceOrientationEvent) {
-    window.addEventListener('deviceorientation', e => {
-        if (window.innerWidth >= 768) return;
-        const x = e.gamma / 5;
-        const y = e.beta / 5;
-        title.style.transform = `translate(${x}px, ${y}px)`;
-        title.style.textShadow =
-            `${-x}px ${-y}px 10px #38bdf8,
-             ${x}px ${y}px 20px #6366f1`;
-    });
-}
-
-// Touch move: gadgets wiggle, bounce, and glow
-let lastTouchX = 0;
-let lastTouchY = 0;
-
-document.addEventListener('touchmove', e => {
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - lastTouchX;
-    const deltaY = touch.clientY - lastTouchY;
-    lastTouchX = touch.clientX;
-    lastTouchY = touch.clientY;
-
-    gadgets.forEach((g, i) => {
-        const moveX = (deltaX * (i+1) / 25);
-        const moveY = (deltaY * (i+1) / 25);
-
-        g.style.transition = 'transform 0.2s ease, text-shadow 0.2s ease';
-        g.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${deltaX + deltaY}deg) scale(1.15)`;
-        g.style.textShadow = '0 0 20px #38bdf8, 0 0 40px #6366f1';
-
-        setTimeout(() => {
-            g.style.transform = '';
-            g.style.textShadow = '0 0 15px #38bdf8';
-            g.style.transition = 'transform 0.3s ease, text-shadow 0.3s ease';
-        }, 200);
-    });
+// Parallax mouse effect
+document.addEventListener('mousemove', e => {
+    if (window.innerWidth < 768) return;
+    const x = (window.innerWidth/2 - e.clientX)/25;
+    const y = (window.innerHeight/2 - e.clientY)/25;
+    title.style.transform = `translate(${x}px, ${y}px)`;
+    title.style.textShadow =
+        `${-x}px ${-y}px 15px #38bdf8,
+         ${x}px ${y}px 30px #6366f1`;
 });
 
-// Tap to rotate, lift, bounce, and glow
+// Tap gadgets to rotate and glow
 gadgets.forEach(g => {
     g.addEventListener('touchstart', () => {
         g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
@@ -271,12 +237,14 @@ gadgets.forEach(g => {
     });
 });
 
-// Scroll to intro on button click
+// Scroll to intro on button click with smooth auto-scroll
 startBtn.addEventListener('click', () => {
-    introSection.scrollIntoView({ behavior: 'smooth' });
+    window.scrollTo({
+        top: introSection.offsetTop,
+        behavior: 'smooth'
+    });
 });
 </script>
 
 </body>
 </html>
-
