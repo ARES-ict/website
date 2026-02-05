@@ -8,19 +8,19 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-/* ========== GLOBAL ========== */
+/* GLOBAL */
 body {
     margin: 0;
     font-family: 'Orbitron', sans-serif;
     background: linear-gradient(180deg, #05010d, #020617);
     color: #e5e7eb;
     overflow-x: hidden;
-    scroll-behavior: smooth; /* smooth scroll for all anchor movements */
+    scroll-behavior: smooth; 
     line-height: 1.8;
 }
 .glow { text-shadow: 0 0 5px #38bdf8, 0 0 15px #6366f1; }
 
-/* ========== ANIMATION BACKGROUND ========== */
+/* ANIMATION BACKGROUND */
 .gadget-background {
     position: fixed;
     inset: 0;
@@ -46,13 +46,13 @@ body {
     100% { transform: translateY(-20vh) rotate(360deg); }
 }
 
-/* ========== CONTENT ========== */
+/* CONTENT */
 header, section, footer {
     position: relative;
     z-index: 1;
 }
 
-/* ========== HERO TITLE PAGE ========== */
+/* TITLE PAGE */
 header {
     height: 100vh;
     display: flex;
@@ -103,7 +103,7 @@ header p {
     box-shadow: 0 0 30px rgba(56,189,248,0.8);
 }
 
-/* ========== INTRO ========== */
+/* INTRO */
 section.intro {
     padding: 30px 5%;
     background: rgba(2,6,23,0.9);
@@ -114,11 +114,11 @@ section.intro {
     line-height: 1.8;
 }
 section.intro p {
-    text-align: left;  /* easy to read */
-    margin-bottom: 25px; /* bigger space between paragraphs */
+    text-align: left; 
+    margin-bottom: 25px; 
 }
 
-/* ========== EPISODE VIDEO ========== */
+/*  EPISODE VIDEO */
 section.episode {
     background: rgba(2,6,23,0.95);
     border-radius: 20px;
@@ -129,13 +129,13 @@ section.episode {
     line-height: 1.8;
 }
 section.episode p {
-    text-align: left;  /* easy to read */
-    margin-bottom: 25px; /* bigger space between paragraphs */
+    text-align: left; 
+    margin-bottom: 40px; 
 }
 .episode h2 { color: #a5b4fc; margin-bottom:15px; }
 .video-container {
     width: 100%;
-    max-width: 900px; /* bigger video */
+    max-width: 900px; 
     margin: 20px auto;
     display: flex;
     justify-content: center;
@@ -146,7 +146,7 @@ video {
     border-radius: 12px;
 }
 
-/* ========== FOOTER ========== */
+/* FOOTER */
 footer {
     text-align:center;
     padding:20px;
@@ -154,7 +154,7 @@ footer {
     font-size: 0.9rem;
 }
 
-/* ========== MOBILE ========== */
+/* MOBILE */
 @media (max-width: 768px) {
     header { padding: 60px 15px; }
     header h1 { font-size: clamp(3rem, 12vw, 6rem); }
@@ -180,7 +180,7 @@ footer {
 <!-- HERO TITLE PAGE -->
 <header>
     <h1 class="glow" id="heroTitle">Offline On Track</h1>
-    <p>Step into a space where technology and life find the perfect balance. Learn to manage screen time, improve focus, and enjoy technology responsibly.</p>
+    <p>Step into a space where technology and life find the perfect balance.</p>
     <button id="startBtn">Start Experience</button>
 </header>
 
@@ -248,4 +248,5 @@ startBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
 
