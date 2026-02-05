@@ -83,6 +83,13 @@ header p {
     margin-bottom: 40px; 
 }
 
+/* Screen time display */
+#screenTime {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #38bdf8;
+}
+
 /* Start Experience Button */
 #startBtn {
     margin-top: 30px;
@@ -181,6 +188,7 @@ footer {
 <header>
     <h1 class="glow" id="heroTitle">Offline On Track</h1>
     <p>Step into a space where technology and life find the perfect balance.</p>
+    <p id="screenTime">Time spent on page: 0m 0s</p>
     <button id="startBtn">Start Experience</button>
 </header>
 
@@ -211,6 +219,7 @@ const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
 const introSection = document.getElementById('intro');
 const gadgets = document.querySelectorAll('.gadget');
+const screenTimeDisplay = document.getElementById('screenTime');
 
 // Parallax mouse effect
 document.addEventListener('mousemove', e => {
@@ -244,10 +253,32 @@ startBtn.addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+
+// -----------------------------
+// SCREEN TIME TRACKER
+// -----------------------------
+let startTime = Date.now();
+let savedTime = parseInt(localStorage.getItem('screenTimeSpent')) || 0;
+
+function updateScreenTime() {
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime)/1000) + savedTime;
+    const minutes = Math.floor(elapsed / 60);
+    const seconds = elapsed % 60;
+    screenTimeDisplay.textContent = `Time spent on page: ${minutes}m ${seconds}s`;
+    localStorage.setItem('screenTimeSpent', elapsed);
+}
+
+// Update every second
+setInterval(updateScreenTime, 1000);
+
+// Save time when user closes or refreshes page
+window.addEventListener('beforeunload', () => {
+    const now = Date.now();
+    const elapsed = Math.floor((now - startTime)/1000) + savedTime;
+    localStorage.setItem('screenTimeSpent', elapsed);
+});
 </script>
 
 </body>
 </html>
-
-
-
