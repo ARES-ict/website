@@ -8,7 +8,6 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-/* GLOBAL */
 body {
     margin: 0;
     font-family: 'Orbitron', sans-serif;
@@ -46,13 +45,11 @@ body {
     100% { transform: translateY(-20vh) rotate(360deg); }
 }
 
-/* CONTENT */
 header, section, footer {
     position: relative;
     z-index: 1;
 }
 
-/* TITLE PAGE */
 header {
     height: 100vh;
     display: flex;
@@ -83,7 +80,6 @@ header p {
     margin-bottom: 40px; 
 }
 
-/* Start Experience Button */
 #startBtn {
     margin-top: 30px;
     padding: 20px 50px;
@@ -220,14 +216,12 @@ footer {
     © 2026 OFFLINE ON TRACK • ICT • Ares
 </footer>
 
-<!-- INTERACTIVE TITLE SCRIPT -->
 <script>
 const title = document.getElementById('heroTitle');
 const startBtn = document.getElementById('startBtn');
 const introSection = document.getElementById('intro');
 const gadgets = document.querySelectorAll('.gadget');
 
-// Parallax mouse effect
 document.addEventListener('mousemove', e => {
     if (window.innerWidth < 768) return;
     const x = (window.innerWidth/2 - e.clientX)/25;
@@ -238,7 +232,6 @@ document.addEventListener('mousemove', e => {
          ${x}px ${y}px 30px #6366f1`;
 });
 
-// Tap gadgets to rotate and glow
 gadgets.forEach(g => {
     g.addEventListener('touchstart', () => {
         g.style.transition = 'transform 0.5s ease, text-shadow 0.3s ease';
