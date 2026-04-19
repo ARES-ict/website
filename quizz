@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline On Track LMS</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(180deg, #05010d, #020617);
+    color: #e5e7eb;
+}
+
+/* Header */
+header {
+    height: 100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+header h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    color:#38bdf8;
+    text-shadow: 0 0 10px #38bdf8;
+}
+
+/* Inputs */
+input, select {
+    padding: 12px;
+    margin: 8px;
+    border-radius: 10px;
+    border: none;
+    width: 250px;
+}
+
+/* Buttons */
+button {
+    padding:15px 25px;
+    border:none;
+    border-radius:25px;
+    background:#38bdf8;
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+/* Quiz box */
+section {
+    padding: 30px 10%;
+}
+
+.question {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(2,6,23,0.9);
+    box-shadow: 0 0 15px rgba(56,189,248,0.2);
+}
+
+#dashboard {
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Offline On Track LMS</h1>
+    <p>Student Login</p>
+
+    <input id="name" placeholder="Full Name">
+    <input id="email" placeholder="Email">
+    
+    <select id="class">
+        <option>Grade 7</option>
+        <option>Grade 8</option>
+        <option>Grade 9</option>
+        <option>Grade 10</option>
+    </select>
+
+    <button onclick="startLMS()">Enter LMS</button>
+</header>
+
+<section id="dashboard">
+
+<h2>Quiz LMS</h2>
+
+<div id="quizArea"></div>
+
+<button onclick="submitQuiz()">Submit Answers</button>
+
+<h2 id="result"></h2>
+
+</section>
+
+<script>
+// ===============================
+// 🔥 GOOGLE SHEETS BACKEND
+// ===============================
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  var data = JSON.parse(e.postData.contents);
+
+  sheet.appendRow([
+    new Date(),
+    data.name,
+    data.email,
+    data.class,
+    data.score,
+    data.total
+  ]);
+
+  return ContentService.createTextOutput("Saved");
+}
+
+// ===============================
+// 📚 LMS QUIZ DATABASE (ADD UNLIMITED QUIZZES)
+// ===============================
+const quizzes = {
+  "General": [
+    {
+      question: "What is a benefit of limiting screen time?",
+      options: ["Better sleep","More stress","Less focus","None"],
+      answer: 0
+    },
+    {
+      question: "Too much screen time affects:",
+      options: ["Sleep","Focus","Mental health","All of the above"],
+      answer: 3
+    }
+  ]
+};
+
+let currentQuiz = quizzes["General"];
+let student = {};
+
+// ===============================
+function startLMS() {
+    student.name = document.getElementById("name").value;
+    student.email = document.getElementById("email").value;
+    student.class = document.getElementById("class").value;
+
+    if (!student.name || !student.email) {
+        alert("Please fill in all fields");
+        return;
+    }
+
+    document.querySelector("header").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+
+    loadQuiz();
+}
+
+// ===============================
+function loadQuiz() {
+    const area = document.getElementById("quizArea");
+    area.innerHTML = "";
+
+    currentQuiz.forEach((q, i) => {
+        let html = `
+        <div class="question">
+            <p><strong>${i+1}. ${q.question}</strong></p>
+        `;
+
+        q.options.forEach((opt, j) => {
+            html += `
+                <label>
+                    <input type="radio" name="q${i}" value="${j}">
+                    ${opt}
+                </label><br>
+            `;
+        });
+
+        html += `</div>`;
+        area.innerHTML += html;
+    });
+}
+
+// ===============================
+function submitQuiz() {
+    let score = 0;
+
+    currentQuiz.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && parseInt(selected.value) === q.answer) {
+            score++;
+        }
+    });
+
+    document.getElementById("result").innerText =
+        `${student.name}, your score is ${score} / ${currentQuiz.length}`;
+
+    // SEND TO GOOGLE SHEETS
+    fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({
+            name: student.name,
+            email: student.email,
+            class: student.class,
+            score: score,
+            total: currentQuiz.length
+        })
+    });
+}
+</script>
+
+</body>
+</html>
