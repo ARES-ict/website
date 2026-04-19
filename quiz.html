@@ -3,46 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Offline On Track LMS</title>
+<title>Offline On Track LMS Pro</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-body {
-    margin: 0;
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(180deg, #05010d, #020617);
-    color: #e5e7eb;
+body{
+    margin:0;
+    font-family:'Orbitron',sans-serif;
+    background:linear-gradient(180deg,#05010d,#020617);
+    color:#e5e7eb;
 }
 
-/* Header */
-header {
-    height: 100vh;
+/* LOGIN */
+#login{
+    height:100vh;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    text-align:center;
 }
 
-header h1 {
-    font-size: clamp(3rem, 8vw, 6rem);
-    color:#38bdf8;
-    text-shadow: 0 0 10px #38bdf8;
+input, select, textarea{
+    padding:10px;
+    margin:5px;
+    border-radius:10px;
+    border:none;
+    width:260px;
 }
 
-/* Inputs */
-input, select {
-    padding: 12px;
-    margin: 8px;
-    border-radius: 10px;
-    border: none;
-    width: 250px;
-}
-
-/* Buttons */
-button {
-    padding:15px 25px;
+/* BUTTON */
+button{
+    padding:12px 20px;
     border:none;
     border-radius:25px;
     background:#38bdf8;
@@ -52,134 +44,209 @@ button {
     margin-top:10px;
 }
 
-/* Quiz box */
-section {
-    padding: 30px 10%;
-}
-
-.question {
-    margin-bottom: 20px;
-    padding: 15px;
-    border-radius: 12px;
-    background: rgba(2,6,23,0.9);
-    box-shadow: 0 0 15px rgba(56,189,248,0.2);
-}
-
-#dashboard {
+/* PANELS */
+#studentPanel,#teacherPanel{
     display:none;
+    padding:20px;
+}
+
+.card{
+    background:rgba(2,6,23,0.9);
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(56,189,248,0.2);
+}
+
+/* QUESTION BOX */
+.qbox{
+    border:1px solid #38bdf8;
+    padding:10px;
+    margin:10px 0;
+    border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>Offline On Track LMS</h1>
-    <p>Student Login</p>
+<!-- LOGIN -->
+<div id="login">
+    <h1>Offline On Track LMS Pro</h1>
 
     <input id="name" placeholder="Full Name">
     <input id="email" placeholder="Email">
-    
-    <select id="class">
-        <option>Grade 7</option>
-        <option>Grade 8</option>
-        <option>Grade 9</option>
-        <option>Grade 10</option>
+
+    <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
     </select>
 
-    <button onclick="startLMS()">Enter LMS</button>
-</header>
+    <button onclick="enter()">Enter</button>
+</div>
 
-<section id="dashboard">
+<!-- STUDENT -->
+<div id="studentPanel">
+    <h2>Student Portal</h2>
+    <div id="quizArea"></div>
+    <button onclick="submitQuiz()">Submit</button>
+    <h3 id="result"></h3>
+</div>
 
-<h2>Quiz LMS</h2>
+<!-- TEACHER -->
+<div id="teacherPanel">
+    <h2>Teacher Portal (Quiz Builder)</h2>
 
-<div id="quizArea"></div>
+    <div class="card">
+        <h3>Create Quiz (Up to 100 Questions)</h3>
 
-<button onclick="submitQuiz()">Submit Answers</button>
+        <input id="q" placeholder="Question">
 
-<h2 id="result"></h2>
+        <select id="type">
+            <option>Multiple Choice</option>
+            <option>Identification</option>
+            <option>Enumeration</option>
+            <option>Fill in the Blanks</option>
+        </select>
 
-</section>
+        <input id="o1" placeholder="Option 1 (MC only)">
+        <input id="o2" placeholder="Option 2">
+        <input id="o3" placeholder="Option 3">
+        <input id="o4" placeholder="Option 4">
+        <input id="answer" placeholder="Correct Answer / Key">
+
+        <button onclick="addQ()">Add Question</button>
+        <button onclick="resetQuiz()">Reset Quiz</button>
+
+        <p id="count">Questions: 0 / 100</p>
+    </div>
+
+    <div class="card">
+        <h3>Preview Quiz</h3>
+        <div id="preview"></div>
+    </div>
+</div>
 
 <script>
-// ===============================
-// 🔥 GOOGLE SHEETS BACKEND
-// ===============================
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
 
+// 🔥 GOOGLE SHEETS BACKEND
+function doPost(e){
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
 
   sheet.appendRow([
     new Date(),
     data.name,
     data.email,
-    data.class,
+    data.role,
     data.score,
     data.total
   ]);
 
-  return ContentService.createTextOutput("Saved");
+  return ContentService.createTextOutput("OK");
 }
+// ===============================
+// QUIZ STORAGE (MAX 100 QUESTIONS)
+// ===============================
+let quiz = [];
+
+let user = {};
 
 // ===============================
-// 📚 LMS QUIZ DATABASE (ADD UNLIMITED QUIZZES)
+// LOGIN
 // ===============================
-const quizzes = {
-  "General": [
-    {
-      question: "What is a benefit of limiting screen time?",
-      options: ["Better sleep","More stress","Less focus","None"],
-      answer: 0
-    },
-    {
-      question: "Too much screen time affects:",
-      options: ["Sleep","Focus","Mental health","All of the above"],
-      answer: 3
-    }
-  ]
-};
+function enter(){
+    user.name = document.getElementById("name").value;
+    user.email = document.getElementById("email").value;
+    user.role = document.getElementById("role").value;
 
-let currentQuiz = quizzes["General"];
-let student = {};
-
-// ===============================
-function startLMS() {
-    student.name = document.getElementById("name").value;
-    student.email = document.getElementById("email").value;
-    student.class = document.getElementById("class").value;
-
-    if (!student.name || !student.email) {
-        alert("Please fill in all fields");
+    if(!user.name || !user.email){
+        alert("Fill all fields");
         return;
     }
 
-    document.querySelector("header").style.display = "none";
-    document.getElementById("dashboard").style.display = "block";
+    document.getElementById("login").style.display="none";
 
-    loadQuiz();
+    if(user.role==="student"){
+        document.getElementById("studentPanel").style.display="block";
+        loadStudentQuiz();
+    } else {
+        document.getElementById("teacherPanel").style.display="block";
+        renderPreview();
+    }
 }
 
 // ===============================
-function loadQuiz() {
-    const area = document.getElementById("quizArea");
-    area.innerHTML = "";
+// TEACHER - ADD QUESTION
+// ===============================
+function addQ(){
+    if(quiz.length >= 100){
+        alert("Max 100 questions reached");
+        return;
+    }
 
-    currentQuiz.forEach((q, i) => {
-        let html = `
-        <div class="question">
-            <p><strong>${i+1}. ${q.question}</strong></p>
-        `;
+    let q = {
+        question: document.getElementById("q").value,
+        type: document.getElementById("type").value,
+        options: [
+            document.getElementById("o1").value,
+            document.getElementById("o2").value,
+            document.getElementById("o3").value,
+            document.getElementById("o4").value
+        ],
+        answer: document.getElementById("answer").value
+    };
 
-        q.options.forEach((opt, j) => {
-            html += `
-                <label>
-                    <input type="radio" name="q${i}" value="${j}">
-                    ${opt}
-                </label><br>
-            `;
-        });
+    quiz.push(q);
+
+    document.getElementById("count").innerText =
+        "Questions: " + quiz.length + " / 100";
+
+    renderPreview();
+}
+
+// ===============================
+function resetQuiz(){
+    quiz = [];
+    renderPreview();
+    document.getElementById("count").innerText = "Questions: 0 / 100";
+}
+
+// ===============================
+// PREVIEW
+// ===============================
+function renderPreview(){
+    let box = document.getElementById("preview");
+    box.innerHTML="";
+
+    quiz.forEach((q,i)=>{
+        box.innerHTML += `
+        <div class="qbox">
+            <b>${i+1}. ${q.question}</b><br>
+            <small>Type: ${q.type}</small>
+        </div>`;
+    });
+}
+
+// ===============================
+// STUDENT LOAD
+// ===============================
+function loadStudentQuiz(){
+    let area = document.getElementById("quizArea");
+    area.innerHTML="";
+
+    quiz.forEach((q,i)=>{
+        let html = `<div class="qbox"><b>${i+1}. ${q.question}</b><br>`;
+
+        if(q.type==="Multiple Choice"){
+            q.options.forEach((o,j)=>{
+                html += `<label>
+                <input type="radio" name="q${i}" value="${o}">
+                ${o}</label><br>`;
+            });
+        } else {
+            html += `<input name="q${i}" placeholder="Answer"><br>`;
+        }
 
         html += `</div>`;
         area.innerHTML += html;
@@ -187,31 +254,37 @@ function loadQuiz() {
 }
 
 // ===============================
-function submitQuiz() {
+// SUBMIT + SCORE
+// ===============================
+function submitQuiz(){
     let score = 0;
 
-    currentQuiz.forEach((q, i) => {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if (selected && parseInt(selected.value) === q.answer) {
-            score++;
+    quiz.forEach((q,i)=>{
+        let ans = document.querySelector(`[name="q${i}"]`);
+
+        if(q.type==="Multiple Choice"){
+            let selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if(selected && selected.value===q.answer){
+                score++;
+            }
         }
     });
 
     document.getElementById("result").innerText =
-        `${student.name}, your score is ${score} / ${currentQuiz.length}`;
+        `${user.name} Score: ${score}/${quiz.length}`;
 
-    // SEND TO GOOGLE SHEETS
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-            name: student.name,
-            email: student.email,
-            class: student.class,
-            score: score,
-            total: currentQuiz.length
+    fetch(SCRIPT_URL,{
+        method:"POST",
+        body:JSON.stringify({
+            name:user.name,
+            email:user.email,
+            role:user.role,
+            score:score,
+            total:quiz.length
         })
     });
 }
+
 </script>
 
 </body>
