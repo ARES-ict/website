@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Offline On Track LMS Secure</title>
+<title>Offline On Track LMS Pro+</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -15,8 +15,8 @@ body{
     color:#e5e7eb;
 }
 
-/* LOGIN */
-#login{
+/* CENTER */
+.container{
     height:100vh;
     display:flex;
     flex-direction:column;
@@ -24,11 +24,12 @@ body{
     align-items:center;
 }
 
+/* INPUTS */
 input, select{
     padding:12px;
     margin:6px;
-    border-radius:10px;
     border:none;
+    border-radius:10px;
     width:260px;
 }
 
@@ -45,15 +46,16 @@ button{
 }
 
 /* PANELS */
-#studentPanel,#teacherPanel{
+#studentPanel,#teacherPanel,#registerPanel{
     display:none;
     padding:20px;
 }
 
+/* BOX */
 .card{
     background:rgba(2,6,23,0.9);
     padding:15px;
-    margin-bottom:15px;
+    margin:10px;
     border-radius:15px;
     box-shadow:0 0 15px rgba(56,189,248,0.2);
 }
@@ -64,28 +66,58 @@ button{
     margin:10px 0;
     border-radius:10px;
 }
+
+a{
+    color:#38bdf8;
+    cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div id="login">
+<div class="container" id="loginPanel">
     <h1>LMS LOGIN</h1>
 
     <input id="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
 
+    <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+    </select>
+
     <button onclick="login()">Login</button>
+    <button onclick="showRegister()">Register</button>
+
+    <a onclick="resetPassword()">Forgot Password?</a>
 
     <p id="msg"></p>
+</div>
+
+<!-- REGISTER -->
+<div class="container" id="registerPanel">
+    <h1>Register Account</h1>
+
+    <input id="r_email" placeholder="Email">
+    <input id="r_password" type="password" placeholder="Password">
+
+    <select id="r_role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+    </select>
+
+    <button onclick="register()">Create Account</button>
+    <button onclick="backLogin()">Back</button>
 </div>
 
 <!-- STUDENT -->
 <div id="studentPanel">
     <h2>Student Portal</h2>
+
     <div id="quizArea"></div>
-    <button onclick="submitQuiz()">Submit</button>
+    <button onclick="submitQuiz()">Submit Quiz</button>
     <h3 id="result"></h3>
 </div>
 
@@ -94,7 +126,7 @@ button{
     <h2>Teacher Portal</h2>
 
     <div class="card">
-        <h3>Create Question</h3>
+        <h3>Create / Edit Quiz</h3>
 
         <input id="q" placeholder="Question">
         <input id="o1" placeholder="Option 1">
@@ -103,18 +135,18 @@ button{
         <input id="o4" placeholder="Option 4">
         <input id="ans" placeholder="Correct Answer">
 
-        <button onclick="addQ()">Add Question</button>
+        <button onclick="addQ()">Add / Save Question</button>
     </div>
 
     <div class="card">
-        <h3>Preview</h3>
+        <h3>Quiz Preview</h3>
         <div id="preview"></div>
     </div>
 </div>
 
 <script>
 
-// 🔥 GOOGLE SHEETS API URL (for scores + users validation optional)
+// 🔥 GOOGLE SHEETS BACKEND URL
 function doPost(e){
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
@@ -131,35 +163,48 @@ function doPost(e){
 }
 
 // ===============================
-// USERS DATABASE (SIMULATED LMS LOGIN)
+// DATABASE (SIMULATION + LMS STYLE)
 // ===============================
-let users = [
-    { email:"teacher@gmail.com", password:"1234", role:"teacher" },
-    { email:"student@gmail.com", password:"1234", role:"student" }
-];
+let users = JSON.parse(localStorage.getItem("users")) || [];
 
-let currentUser = {};
 let quiz = [];
+let currentUser = {};
 
 // ===============================
-// LOGIN SYSTEM (EMAIL + PASSWORD)
+// REGISTER
+// ===============================
+function register(){
+    let email = document.getElementById("r_email").value;
+    let pass = document.getElementById("r_password").value;
+    let role = document.getElementById("r_role").value;
+
+    users.push({email, password:pass, role});
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account Created!");
+    backLogin();
+}
+
+// ===============================
+// LOGIN
 // ===============================
 function login(){
     let email = document.getElementById("email").value;
     let pass = document.getElementById("password").value;
+    let role = document.getElementById("role").value;
 
-    let found = users.find(u => u.email === email && u.password === pass);
+    let found = users.find(u => u.email===email && u.password===pass && u.role===role);
 
     if(!found){
-        document.getElementById("msg").innerText = "Invalid login";
+        document.getElementById("msg").innerText="Invalid login";
         return;
     }
 
     currentUser = found;
 
-    document.getElementById("login").style.display="none";
+    document.getElementById("loginPanel").style.display="none";
 
-    if(found.role==="student"){
+    if(role==="student"){
         document.getElementById("studentPanel").style.display="block";
         loadQuiz();
     } else {
@@ -169,7 +214,40 @@ function login(){
 }
 
 // ===============================
-// QUIZ SYSTEM
+// RESET PASSWORD
+// ===============================
+function resetPassword(){
+    let email = prompt("Enter your email:");
+    let user = users.find(u => u.email===email);
+
+    if(!user){
+        alert("Email not found");
+        return;
+    }
+
+    let newPass = prompt("Enter new password:");
+    user.password = newPass;
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Password reset successful");
+}
+
+// ===============================
+// UI SWITCH
+// ===============================
+function showRegister(){
+    document.getElementById("loginPanel").style.display="none";
+    document.getElementById("registerPanel").style.display="flex";
+}
+
+function backLogin(){
+    document.getElementById("registerPanel").style.display="none";
+    document.getElementById("loginPanel").style.display="flex";
+}
+
+// ===============================
+// TEACHER QUIZ
 // ===============================
 function addQ(){
     quiz.push({
@@ -187,50 +265,47 @@ function addQ(){
 }
 
 function renderPreview(){
-    let box = document.getElementById("preview");
+    let box=document.getElementById("preview");
     box.innerHTML="";
 
     quiz.forEach((q,i)=>{
-        box.innerHTML += `
-        <div class="qbox">
-            <b>${i+1}. ${q.question}</b>
-        </div>`;
+        box.innerHTML+=`<div class="qbox"><b>${i+1}. ${q.question}</b></div>`;
     });
 }
 
 // ===============================
+// STUDENT QUIZ
+// ===============================
 function loadQuiz(){
-    let area = document.getElementById("quizArea");
+    let area=document.getElementById("quizArea");
     area.innerHTML="";
 
     quiz.forEach((q,i)=>{
-        let html = `<div class="qbox"><b>${i+1}. ${q.question}</b><br>`;
+        let html=`<div class="qbox"><b>${i+1}. ${q.question}</b><br>`;
 
         q.options.forEach(o=>{
-            html += `
-            <label>
-                <input type="radio" name="q${i}" value="${o}">
-                ${o}
-            </label><br>`;
+            html+=`<label><input type="radio" name="q${i}" value="${o}">${o}</label><br>`;
         });
 
-        html += `</div>`;
-        area.innerHTML += html;
+        html+=`</div>`;
+        area.innerHTML+=html;
     });
 }
 
 // ===============================
+// SUBMIT
+// ===============================
 function submitQuiz(){
-    let score = 0;
+    let score=0;
 
     quiz.forEach((q,i)=>{
-        let selected = document.querySelector(`input[name="q${i}"]:checked`);
-        if(selected && selected.value === q.answer){
+        let selected=document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected && selected.value===q.answer){
             score++;
         }
     });
 
-    document.getElementById("result").innerText =
+    document.getElementById("result").innerText=
         `${currentUser.email} scored ${score}/${quiz.length}`;
 
     fetch(SCRIPT_URL,{
