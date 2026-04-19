@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Offline On Track LMS Pro</title>
+<title>Offline On Track LMS Secure</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -24,9 +24,9 @@ body{
     align-items:center;
 }
 
-input, select, textarea{
-    padding:10px;
-    margin:5px;
+input, select{
+    padding:12px;
+    margin:6px;
     border-radius:10px;
     border:none;
     width:260px;
@@ -34,7 +34,7 @@ input, select, textarea{
 
 /* BUTTON */
 button{
-    padding:12px 20px;
+    padding:12px 25px;
     border:none;
     border-radius:25px;
     background:#38bdf8;
@@ -58,7 +58,6 @@ button{
     box-shadow:0 0 15px rgba(56,189,248,0.2);
 }
 
-/* QUESTION BOX */
 .qbox{
     border:1px solid #38bdf8;
     padding:10px;
@@ -72,17 +71,14 @@ button{
 
 <!-- LOGIN -->
 <div id="login">
-    <h1>Offline On Track LMS Pro</h1>
+    <h1>LMS LOGIN</h1>
 
-    <input id="name" placeholder="Full Name">
     <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
 
-    <select id="role">
-        <option value="student">Student</option>
-        <option value="teacher">Teacher</option>
-    </select>
+    <button onclick="login()">Login</button>
 
-    <button onclick="enter()">Enter</button>
+    <p id="msg"></p>
 </div>
 
 <!-- STUDENT -->
@@ -95,48 +91,36 @@ button{
 
 <!-- TEACHER -->
 <div id="teacherPanel">
-    <h2>Teacher Portal (Quiz Builder)</h2>
+    <h2>Teacher Portal</h2>
 
     <div class="card">
-        <h3>Create Quiz (Up to 100 Questions)</h3>
+        <h3>Create Question</h3>
 
         <input id="q" placeholder="Question">
-
-        <select id="type">
-            <option>Multiple Choice</option>
-            <option>Identification</option>
-            <option>Enumeration</option>
-            <option>Fill in the Blanks</option>
-        </select>
-
-        <input id="o1" placeholder="Option 1 (MC only)">
+        <input id="o1" placeholder="Option 1">
         <input id="o2" placeholder="Option 2">
         <input id="o3" placeholder="Option 3">
         <input id="o4" placeholder="Option 4">
-        <input id="answer" placeholder="Correct Answer / Key">
+        <input id="ans" placeholder="Correct Answer">
 
         <button onclick="addQ()">Add Question</button>
-        <button onclick="resetQuiz()">Reset Quiz</button>
-
-        <p id="count">Questions: 0 / 100</p>
     </div>
 
     <div class="card">
-        <h3>Preview Quiz</h3>
+        <h3>Preview</h3>
         <div id="preview"></div>
     </div>
 </div>
 
 <script>
 
-// 🔥 GOOGLE SHEETS BACKEND
+// 🔥 GOOGLE SHEETS API URL (for scores + users validation optional)
 function doPost(e){
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
 
   sheet.appendRow([
     new Date(),
-    data.name,
     data.email,
     data.role,
     data.score,
@@ -145,31 +129,39 @@ function doPost(e){
 
   return ContentService.createTextOutput("OK");
 }
+
 // ===============================
-// QUIZ STORAGE (MAX 100 QUESTIONS)
+// USERS DATABASE (SIMULATED LMS LOGIN)
 // ===============================
+let users = [
+    { email:"teacher@gmail.com", password:"1234", role:"teacher" },
+    { email:"student@gmail.com", password:"1234", role:"student" }
+];
+
+let currentUser = {};
 let quiz = [];
 
-let user = {};
-
 // ===============================
-// LOGIN
+// LOGIN SYSTEM (EMAIL + PASSWORD)
 // ===============================
-function enter(){
-    user.name = document.getElementById("name").value;
-    user.email = document.getElementById("email").value;
-    user.role = document.getElementById("role").value;
+function login(){
+    let email = document.getElementById("email").value;
+    let pass = document.getElementById("password").value;
 
-    if(!user.name || !user.email){
-        alert("Fill all fields");
+    let found = users.find(u => u.email === email && u.password === pass);
+
+    if(!found){
+        document.getElementById("msg").innerText = "Invalid login";
         return;
     }
 
+    currentUser = found;
+
     document.getElementById("login").style.display="none";
 
-    if(user.role==="student"){
+    if(found.role==="student"){
         document.getElementById("studentPanel").style.display="block";
-        loadStudentQuiz();
+        loadQuiz();
     } else {
         document.getElementById("teacherPanel").style.display="block";
         renderPreview();
@@ -177,44 +169,23 @@ function enter(){
 }
 
 // ===============================
-// TEACHER - ADD QUESTION
+// QUIZ SYSTEM
 // ===============================
 function addQ(){
-    if(quiz.length >= 100){
-        alert("Max 100 questions reached");
-        return;
-    }
-
-    let q = {
-        question: document.getElementById("q").value,
-        type: document.getElementById("type").value,
-        options: [
+    quiz.push({
+        question:document.getElementById("q").value,
+        options:[
             document.getElementById("o1").value,
             document.getElementById("o2").value,
             document.getElementById("o3").value,
             document.getElementById("o4").value
         ],
-        answer: document.getElementById("answer").value
-    };
-
-    quiz.push(q);
-
-    document.getElementById("count").innerText =
-        "Questions: " + quiz.length + " / 100";
+        answer:document.getElementById("ans").value
+    });
 
     renderPreview();
 }
 
-// ===============================
-function resetQuiz(){
-    quiz = [];
-    renderPreview();
-    document.getElementById("count").innerText = "Questions: 0 / 100";
-}
-
-// ===============================
-// PREVIEW
-// ===============================
 function renderPreview(){
     let box = document.getElementById("preview");
     box.innerHTML="";
@@ -222,31 +193,26 @@ function renderPreview(){
     quiz.forEach((q,i)=>{
         box.innerHTML += `
         <div class="qbox">
-            <b>${i+1}. ${q.question}</b><br>
-            <small>Type: ${q.type}</small>
+            <b>${i+1}. ${q.question}</b>
         </div>`;
     });
 }
 
 // ===============================
-// STUDENT LOAD
-// ===============================
-function loadStudentQuiz(){
+function loadQuiz(){
     let area = document.getElementById("quizArea");
     area.innerHTML="";
 
     quiz.forEach((q,i)=>{
         let html = `<div class="qbox"><b>${i+1}. ${q.question}</b><br>`;
 
-        if(q.type==="Multiple Choice"){
-            q.options.forEach((o,j)=>{
-                html += `<label>
+        q.options.forEach(o=>{
+            html += `
+            <label>
                 <input type="radio" name="q${i}" value="${o}">
-                ${o}</label><br>`;
-            });
-        } else {
-            html += `<input name="q${i}" placeholder="Answer"><br>`;
-        }
+                ${o}
+            </label><br>`;
+        });
 
         html += `</div>`;
         area.innerHTML += html;
@@ -254,31 +220,24 @@ function loadStudentQuiz(){
 }
 
 // ===============================
-// SUBMIT + SCORE
-// ===============================
 function submitQuiz(){
     let score = 0;
 
     quiz.forEach((q,i)=>{
-        let ans = document.querySelector(`[name="q${i}"]`);
-
-        if(q.type==="Multiple Choice"){
-            let selected = document.querySelector(`input[name="q${i}"]:checked`);
-            if(selected && selected.value===q.answer){
-                score++;
-            }
+        let selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if(selected && selected.value === q.answer){
+            score++;
         }
     });
 
     document.getElementById("result").innerText =
-        `${user.name} Score: ${score}/${quiz.length}`;
+        `${currentUser.email} scored ${score}/${quiz.length}`;
 
     fetch(SCRIPT_URL,{
         method:"POST",
         body:JSON.stringify({
-            name:user.name,
-            email:user.email,
-            role:user.role,
+            email:currentUser.email,
+            role:currentUser.role,
             score:score,
             total:quiz.length
         })
